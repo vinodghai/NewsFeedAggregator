@@ -10,8 +10,8 @@ object NewsApiService {
     private val retrofit = RetrofitClient.getClient()
     private val newsApi = retrofit.create(NewsApi::class.java)
 
-    suspend fun getNews(q: String, pageSize: Int, page: Int): NewsDto {
-        val newsResponse = newsApi.getNews(q, pageSize, page)
+    suspend fun getNews(pageSize: Int, page: Int): NewsDto {
+        val newsResponse = newsApi.getNews(pageSize, page)
         if (newsResponse.isSuccessful && newsResponse.body() != null)
             return newsResponse.body()!!
         throw IOException(newsResponse.message())

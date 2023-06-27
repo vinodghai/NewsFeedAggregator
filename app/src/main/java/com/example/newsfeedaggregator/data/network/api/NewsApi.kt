@@ -7,9 +7,8 @@ import retrofit2.http.Query
 
 interface NewsApi {
 
-    @GET("everything")
+    @GET("everything?q=bitcoin")
     suspend fun getNews(
-        @Query("q") q: String,
         @Query("pageSize") pageSize: Int,
         @Query("page") page: Int
     ): Response<NewsDto>

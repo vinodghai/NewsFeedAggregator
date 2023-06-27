@@ -6,19 +6,19 @@ import androidx.paging.PagingDataAdapter
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
-import com.example.newsfeedaggregator.data.network.dtos.ArticleDto
+import com.example.newsfeedaggregator.data.database.entities.Article
 import com.example.newsfeedaggregator.databinding.ItemArticleBinding
 
 class ArticleAdapter :
-    PagingDataAdapter<ArticleDto, ArticleAdapter.ArticleViewHolder>(ArticleComparator) {
+    PagingDataAdapter<Article, ArticleAdapter.ArticleViewHolder>(ArticleComparator) {
 
-    companion object ArticleComparator : DiffUtil.ItemCallback<ArticleDto>() {
+    companion object ArticleComparator : DiffUtil.ItemCallback<Article>() {
 
-        override fun areItemsTheSame(oldItem: ArticleDto, newItem: ArticleDto): Boolean {
+        override fun areItemsTheSame(oldItem: Article, newItem: Article): Boolean {
             return oldItem.url == newItem.url
         }
 
-        override fun areContentsTheSame(oldItem: ArticleDto, newItem: ArticleDto): Boolean {
+        override fun areContentsTheSame(oldItem: Article, newItem: Article): Boolean {
             return oldItem == newItem
         }
     }
@@ -26,11 +26,14 @@ class ArticleAdapter :
     inner class ArticleViewHolder(private val binding: ItemArticleBinding) :
         RecyclerView.ViewHolder(binding.root) {
 
-        fun bind(article: ArticleDto?) {
+        fun bind(article: Article?) {
             article?.run {
                 binding.run {
                     tvTitle.text = title
-                    Glide.with(root).load(urlToImage).into(ivCover)
+                    Glide.with(root)
+                        .load(urlToImage)
+                        .error(android.R.drawable.ic_dialog_alert)
+                        .into(ivCover)
                 }
             }
         }
@@ -38,8 +41,6 @@ class ArticleAdapter :
 
     override fun onBindViewHolder(holder: ArticleViewHolder, position: Int) {
         val item = getItem(position)
-        // Note that item may be null. ViewHolder must support binding a
-        // null item as a placeholder.
         holder.bind(item)
     }
 
